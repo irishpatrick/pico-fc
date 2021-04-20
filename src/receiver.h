@@ -15,5 +15,6 @@ typedef struct _receiver
 void receiver_init(receiver*);
 int receiver_map_input(receiver*, uint, uint);
 int receiver_start(receiver*);
+void has_timer_fired(void);
 
 #endif /* RECEIVER_H */
