@@ -7,6 +7,8 @@ project(pico-fc)
 # Initialize the SDK
 pico_sdk_init()
 
+add_subdirectory(${CMAKE_SOURCE_DIR}/pico-servo)
+
 set(sources
     ${CMAKE_SOURCE_DIR}/src/main.c
     ${CMAKE_SOURCE_DIR}/src/receiver.h
@@ -23,8 +25,8 @@ endif()
 
 add_executable(${PROJECT_NAME} ${sources})
 
-target_include_directories(${PROJECT_NAME} PRIVATE include)
+target_include_directories(${PROJECT_NAME} PRIVATE include pico-servo/include)
 
 # Pull in our pico_stdlib which pulls in commonly used features
-target_link_libraries(${PROJECT_NAME} pico_stdlib hardware_pwm)
+target_link_libraries(${PROJECT_NAME} pico_stdlib hardware_pwm pico-servo)
 

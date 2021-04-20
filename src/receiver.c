@@ -34,6 +34,7 @@ void receiver_init(receiver* rx)
     for (int i = 0; i < MAX_N_INPUTS; ++i)
     {
         rx->pin_map[i] = -1;
+        rx->duty_cycle[i] = 0.f;
     }
 
     rx->n_channels = 0;
@@ -64,6 +65,8 @@ int receiver_map_input(receiver* rx, uint chan_num, uint pin)
     pwm_init(slice_num, &cfg, false);
     gpio_set_function(pin, GPIO_FUNC_PWM);
 
+    rx->pin_map[chan_num] = pin;
+
     ++rx->n_channels;
 
     return 0;
@@ -76,11 +79,27 @@ int receiver_start(receiver* rx)
         pwm_set_enabled(pwm_gpio_to_slice_num(rx->pin_map[i]), true);
     }
     
-    add_repeating_timer_ms(-10, measure_callback, (void*)rx, &measure_timer);
+    add_repeating_timer_ms(20, measure_callback, (void*)rx, &measure_timer);
 
     return 0;
 }
 
+float measure_duty_cycle(uint pin)
+{
+    uint ctr = 0;
+    uint slice_num = pwm_gpio_to_slice_num(pin);
+    pwm_set_counter(slice_num, 0);
+    pwm_set_enabled(slice_num, true);
+    sleep_ms(20);
+    pwm_set_enabled(slice_num, false);
+
+    ctr = pwm_get_counter(slice_num);
+    float counting_rate = clock_get_hz(clk_sys) / 100;
+    float max_possible_count = counting_rate * 0.01;
+    return ctr / max_possible_count;
+}
+
 void has_timer_fired(void)
 {
+
 }
