@@ -6,6 +6,7 @@ typedef struct _imu
     float accel[3];
     float omega[3];
     float quat[4];
+    float compass[3];
 } imu;
 
 int imu_init(imu*);

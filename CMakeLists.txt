@@ -28,5 +28,5 @@ add_executable(${PROJECT_NAME} ${sources})
 target_include_directories(${PROJECT_NAME} PRIVATE include pico-servo/include)
 
 # Pull in our pico_stdlib which pulls in commonly used features
-target_link_libraries(${PROJECT_NAME} pico_stdlib hardware_pwm pico-servo)
+target_link_libraries(${PROJECT_NAME} pico_stdlib hardware_pwm hardware_i2c hardware_spi pico-servo)
 

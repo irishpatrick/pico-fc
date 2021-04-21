@@ -1,4 +1,6 @@
 #include "receiver.h"
+#include "imu.h"
+#include "bar.h"
 #include "pico_servo.h"
 
 #include "pico/stdlib.h"
@@ -8,6 +10,8 @@
 #include <stdio.h>
 
 static receiver rx;
+static imu agm;
+static barometer alt;
 static int dir = 1;
 static int angle = 0;
 

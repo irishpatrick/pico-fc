@@ -5,6 +5,10 @@ typedef struct _barometer
 {
     float alt;
     float pres;
+    float temp;
 } barometer;
+
+int bar_reset(barometer*);
+int bar_poll(barometer*);
 
 #endif /* BAR_H */
