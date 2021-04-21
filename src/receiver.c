@@ -5,14 +5,17 @@
 
 #include <stdio.h>
 
+#define COUNT_INTERVAL 20
+#define COUNT_CLKDIV 1000
+
 static struct repeating_timer measure_timer;
 
 static bool measure_callback(repeating_timer_t* rt)
 {
     receiver* rx = (receiver*)rt->user_data;
 
-    float counting_rate = clock_get_hz(clk_sys) / 100;
-    float max_possible_count = counting_rate * 0.01;
+    float counting_rate = clock_get_hz(clk_sys) / COUNT_CLKDIV;
+    float max_possible_count = counting_rate * COUNT_INTERVAL / 1000.0;
 
     for (int i = 0; i < rx->n_channels; ++i)
     {
@@ -61,7 +64,7 @@ int receiver_map_input(receiver* rx, uint chan_num, uint pin)
 
     pwm_config cfg = pwm_get_default_config();
     pwm_config_set_clkdiv_mode(&cfg, PWM_DIV_B_HIGH);
-    pwm_config_set_clkdiv(&cfg, 100);
+    pwm_config_set_clkdiv(&cfg, COUNT_CLKDIV);
     pwm_init(slice_num, &cfg, false);
     gpio_set_function(pin, GPIO_FUNC_PWM);
 
@@ -79,27 +82,7 @@ int receiver_start(receiver* rx)
         pwm_set_enabled(pwm_gpio_to_slice_num(rx->pin_map[i]), true);
     }
     
-    add_repeating_timer_ms(20, measure_callback, (void*)rx, &measure_timer);
+    add_repeating_timer_ms(-COUNT_INTERVAL, measure_callback, (void*)rx, &measure_timer);
 
     return 0;
-}
-
-float measure_duty_cycle(uint pin)
-{
-    uint ctr = 0;
-    uint slice_num = pwm_gpio_to_slice_num(pin);
-    pwm_set_counter(slice_num, 0);
-    pwm_set_enabled(slice_num, true);
-    sleep_ms(20);
-    pwm_set_enabled(slice_num, false);
-
-    ctr = pwm_get_counter(slice_num);
-    float counting_rate = clock_get_hz(clk_sys) / 100;
-    float max_possible_count = counting_rate * 0.01;
-    return ctr / max_possible_count;
-}
-
-void has_timer_fired(void)
-{
-
 }
