@@ -10,6 +10,11 @@
 #define I2C_ADDR 0x76
 //#define I2C_ADDR 0X77
 
+int bar_init(barometer* bar)
+{
+
+}
+
 int bar_reset(barometer* bar)
 {
 

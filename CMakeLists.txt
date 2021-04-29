@@ -15,6 +15,10 @@ set(sources
     ${CMAKE_SOURCE_DIR}/src/receiver.c
 )
 
+if (${GPS_MTK3339})
+    set(sources ${sources} ${CMAKE_SOURCE_DIR}/src/gps_mtk3339.c)
+endif()
+
 if (${IMU_BNO055})
     set(sources ${sources} ${CMAKE_SOURCE_DIR}/src/imu_bno055.c)
 endif()

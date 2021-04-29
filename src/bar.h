@@ -8,6 +8,7 @@ typedef struct _barometer
     float temp;
 } barometer;
 
+int bar_init(barometer*);
 int bar_reset(barometer*);
 int bar_poll(barometer*);
 
